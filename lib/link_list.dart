@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:lnkr_syafiq_afifuddin/components/link_card.dart';
 import 'package:lnkr_syafiq_afifuddin/http_helper.dart';
 import 'package:lnkr_syafiq_afifuddin/model/link.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 
 class LinkList extends StatefulWidget {
   const LinkList({super.key});
@@ -23,15 +24,42 @@ class LinkListState extends State<LinkList> {
 
   List<dynamic> _links = [];
   bool _isLoading = true;
+  int _page = 1;
+  bool _isEnd = false;
 
   Future<void> _fetchMyLinks() async {
-    final response = await http.get('/link/mine');
+    _isLoading = _page == 1;
+    setState(() => {});
+
+    final response = await http.get('/link/mine?page=$_page');
     final res = json.decode(response.body);
 
-    setState(() {
-      _links = res['data'].map((i) => Link.fromJson(i)).toList();
-      _isLoading = false;
-    });
+    List data = res['data'].map((i) => Link.fromJson(i)).toList();
+    _isEnd = data.isEmpty;
+    if (_page == 1) {
+      _links = data;
+    } else {
+      _links = [..._links, ...data];
+    }
+
+    _isLoading = false;
+    setState(() => {});
+  }
+
+  // for smart refresher
+  final RefreshController _refreshController =
+      RefreshController(initialRefresh: false);
+
+  void _onRefresh() async {
+    _page = 1;
+    await _fetchMyLinks();
+    _refreshController.refreshCompleted();
+  }
+
+  void _onLoad() async {
+    _page += 1;
+    await _fetchMyLinks();
+    _refreshController.loadComplete();
   }
 
   @override
@@ -42,24 +70,32 @@ class LinkListState extends State<LinkList> {
           ? const Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.all(8),
-              child: ListView.builder(
-                  itemCount: (_links.length / 2).ceil(),
-                  itemBuilder: (context, index) {
-                    final itemIndex1 = index * 2;
-                    final itemIndex2 = itemIndex1 + 1;
+              child: SmartRefresher(
+                enablePullDown: true,
+                enablePullUp: !_isEnd,
+                header: const WaterDropMaterialHeader(),
+                controller: _refreshController,
+                onRefresh: _onRefresh,
+                onLoading: _onLoad,
+                child: ListView.builder(
+                    itemCount: (_links.length / 2).ceil(),
+                    itemBuilder: (context, index) {
+                      final itemIndex1 = index * 2;
+                      final itemIndex2 = itemIndex1 + 1;
 
-                    return Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Expanded(
-                            child: LinkCard(_links[itemIndex1]),
-                          ),
-                          if (itemIndex2 < _links.length)
+                      return Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
                             Expanded(
-                              child: LinkCard(_links[itemIndex2]),
-                            )
-                        ]);
-                  }),
+                              child: LinkCard(_links[itemIndex1]),
+                            ),
+                            if (itemIndex2 < _links.length)
+                              Expanded(
+                                child: LinkCard(_links[itemIndex2]),
+                              )
+                          ]);
+                    }),
+              ),
             ),
     );
   }
