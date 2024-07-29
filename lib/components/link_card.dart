@@ -9,7 +9,7 @@ class LinkCard extends StatelessWidget {
 
   void _launchURL(String url) async {
     Uri raw = Uri.parse(link.link);
-    Uri uri = Uri(scheme: 'https', host: raw.host, path: raw.path);
+    Uri uri = Uri(scheme: raw.scheme, host: raw.host, path: raw.path);
     await _launchInBrowser(uri);
   }
 
@@ -25,7 +25,11 @@ class LinkCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(16.0),
+      ),
       child: InkWell(
+        borderRadius: BorderRadius.circular(16.0),
         onTap: () {
           _launchURL(link.link);
         },
