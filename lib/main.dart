@@ -19,8 +19,8 @@ class Linker extends StatelessWidget {
       // home: const Home(),
       initialRoute: '/',
       routes: {
-        '/': (context) => LoginPage(), // Default route
-        '/home': (context) => const LinkList(), // Home page route
+        '/': (context) => const LinkList(), // Default route
+        '/login': (context) => const LoginPage(), // Home page route
       },
     );
   }
@@ -32,6 +32,6 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // return const LinkList();
-    return LoginPage();
+    return const LoginPage();
   }
 }

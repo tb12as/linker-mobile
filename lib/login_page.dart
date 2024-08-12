@@ -24,10 +24,10 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<void> _checkIsLogged(BuildContext context) async {
     final http = HttpHelper();
-
-    http.get('/user').then((value) {
-      return Navigator.pushReplacementNamed(context, '/home');
-    });
+    final response = await http.get('/user');
+    if (response.statusCode == 200 && context.mounted) {
+      Navigator.pushReplacementNamed(context, '/');
+    }
   }
 
   Future<void> _login(BuildContext context) async {
@@ -71,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
       if (context.mounted) {
         _isLoading = false;
         setState(() => {});
-        Navigator.pushReplacementNamed(context, '/home');
+        Navigator.pushReplacementNamed(context, '/');
       }
     } else {
       final body = jsonDecode(response.body);
@@ -90,7 +90,6 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(_isLoading.toString());
     _checkIsLogged(context);
 
     return Scaffold(

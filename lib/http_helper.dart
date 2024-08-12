@@ -16,6 +16,12 @@ class HttpHelper {
       'Accept': 'application/json',
       'Authorization': 'Bearer $token',
     });
+
+    if (response.statusCode == 401) {
+      prefs.remove('token');
+      return response;
+    }
+
     _responseValidation(response);
 
     return response;

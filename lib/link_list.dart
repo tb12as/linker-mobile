@@ -63,16 +63,26 @@ class LinkListState extends State<LinkList> {
     _refreshController.loadComplete();
   }
 
+  Future<void> _checkIsLogged(BuildContext context) async {
+    final http = HttpHelper();
+
+    final response = await http.get('/user');
+    if (response.statusCode == 401 && context.mounted) {
+      Navigator.pushReplacementNamed(context, '/login');
+    }
+  }
+
   void _logout(BuildContext context) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.remove('token');
     if (context.mounted) {
-      Navigator.pushReplacementNamed(context, '/');
+      Navigator.pushReplacementNamed(context, '/login');
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    _checkIsLogged(context);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Linker'),
