@@ -38,6 +38,7 @@ dependencies:
   http: ^1.2.2
   url_launcher: ^6.3.0
   pull_to_refresh: ^2.0.0
+  shared_preferences: ^2.2.3
 
 dev_dependencies:
   flutter_test:
@@ -63,6 +64,8 @@ flutter_launcher_icons:
 
 # The following section is specific to Flutter packages.
 flutter:
+  assets:
+    - assets/
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in

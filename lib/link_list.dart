@@ -5,6 +5,7 @@ import 'package:lnkr_syafiq_afifuddin/components/link_card.dart';
 import 'package:lnkr_syafiq_afifuddin/http_helper.dart';
 import 'package:lnkr_syafiq_afifuddin/model/link.dart';
 import 'package:pull_to_refresh/pull_to_refresh.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LinkList extends StatefulWidget {
   const LinkList({super.key});
@@ -62,10 +63,37 @@ class LinkListState extends State<LinkList> {
     _refreshController.loadComplete();
   }
 
+  void _logout(BuildContext context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('token');
+    if (context.mounted) {
+      Navigator.pushReplacementNamed(context, '/');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Linker')),
+      appBar: AppBar(
+        title: const Text('Linker'),
+        actions: [
+          PopupMenuButton<String>(
+            onSelected: (String value) {
+              if (value == 'logout') {
+                _logout(context);
+              }
+            },
+            itemBuilder: (BuildContext context) {
+              return [
+                const PopupMenuItem<String>(
+                  value: 'logout',
+                  child: Text('Logout'),
+                ),
+              ];
+            },
+          ),
+        ],
+      ),
       body: _isLoading
           ? const Center(child: CircularProgressIndicator())
           : Padding(
