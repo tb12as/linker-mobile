@@ -95,57 +95,60 @@ class _LoginPageState extends State<LoginPage> {
     return Scaffold(
         body: _isLoading
             ? const Center(child: CircularProgressIndicator())
-            : SingleChildScrollView(
-                child: Container(
-                  padding: const EdgeInsets.all(20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      // form start
-                      const SizedBox(height: 40),
-                      Image.asset(
-                        'assets/logo.png',
-                        height: 90,
-                        width: 90,
-                      ),
-                      // const Text("Login",
-                      //     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 10),
-                      const Text(
-                        "Welcome back, please login to continue",
-                      ),
-                      const SizedBox(height: 20),
-                      TextField(
-                        controller: usernameController,
-                        decoration: const InputDecoration(
-                          labelText: 'Username',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
-                      const SizedBox(height: 20),
-                      TextField(
-                        controller: passwordController,
-                        obscureText: true,
-                        decoration: const InputDecoration(
-                          labelText: 'Password',
-                          border: OutlineInputBorder(),
-                        ),
-                      ),
+            : SafeArea(
+                child: Center(
+                  child: SingleChildScrollView(
+                    child: Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          // form start
+                          // const SizedBox(height: 40),
+                          Image.asset(
+                            'assets/logo.png',
+                            height: 90,
+                            width: 90,
+                          ),
+                          // const Text("Login",
+                          //     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold)),
+                          const SizedBox(height: 10),
+                          const Text(
+                            "Welcome back, please login to continue",
+                            style: TextStyle(color: Colors.white70),
+                          ),
+                          const SizedBox(height: 20),
+                          TextField(
+                            controller: usernameController,
+                            decoration: const InputDecoration(
+                              labelText: 'Username',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
+                          const SizedBox(height: 20),
+                          TextField(
+                            controller: passwordController,
+                            obscureText: true,
+                            decoration: const InputDecoration(
+                              labelText: 'Password',
+                              border: OutlineInputBorder(),
+                            ),
+                          ),
 
-                      const SizedBox(height: 20),
-                      ElevatedButton(
-                        style: const ButtonStyle(
-                            padding: MaterialStatePropertyAll(
-                                EdgeInsets.symmetric(
-                                    vertical: 10, horizontal: 30))),
-                        onPressed: () => {_login(context)},
-                        child: const Text(
-                          "Login",
-                          style: TextStyle(fontSize: 18),
-                        ),
+                          const SizedBox(height: 20),
+                          ElevatedButton(
+                            style: const ButtonStyle(
+                                padding: MaterialStatePropertyAll(
+                                    EdgeInsets.symmetric(
+                                        vertical: 10, horizontal: 30))),
+                            onPressed: () => {_login(context)},
+                            child: const Text("Login"),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ));
